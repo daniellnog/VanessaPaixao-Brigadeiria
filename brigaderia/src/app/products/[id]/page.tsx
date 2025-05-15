@@ -1,16 +1,19 @@
 import { getProductById } from "@/lib/sanity-queries";
 import { notFound } from "next/navigation";
-import { Product } from "@/types/types";
 
 type Props = {
-  params: { id: string };
+  params: {
+    id: string;
+  };
 };
 
 export default async function ProductPage({ params }: Props) {
-  const product: Product | null = await getProductById(params.id);
+  // Destructure the id after awaiting params
+  const { id } = await params;
+  const product = await getProductById(id);
 
   if (!product) {
-    notFound();
+    return notFound();
   }
 
   return (
