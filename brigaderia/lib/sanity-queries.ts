@@ -1,47 +1,52 @@
 import { client } from './sanity'
 import { Product } from '@/types/types'
 
-export async function getProducts(): Promise<Product[]> {
-  const query = `*[_type == "produto"]{
+export async function getProducts(lang: string): Promise<Product[]> {
+  const query = `*[_type == "produto" && idioma == $lang]{
     _id,
     nome,
     preco,
-    "imagem": imagem.asset->url,
-    slug
-  }`
+    translationGroupId,
+    "imagem": imagem.asset->url
+  }`;
 
-  const products = await client.fetch(query);
+  const products = await client.fetch(query, { lang });
 
-  // Fazendo o mapeamento para o tipo Product
-  return products.map((product: { _id: string; nome: string; preco: string; imagem: string; }) => ({
+  return products.map((product: { _id: string; nome: string; preco: number; imagem: string, translationGroupId: string }) => ({
     _id: product._id,
-    name: product.nome,  // Mapeando 'nome' para 'name'
-    price: product.preco, // Mapeando 'preco' para 'price'
-    image: product.imagem,  // Mapeando 'imagem' para 'image'
+    name: product.nome,
+    price: product.preco,
+    translationGroupId: product.translationGroupId,
+    image: product.imagem,
   }));
 }
 
-export async function getProductById(id: string): Promise<Product | null> {
-  const query = `*[_type == "produto" && _id == $id][0]{
+export async function getProductByTranslationGroupId(
+  groupId: string,
+  lang: string
+): Promise<Product | null> {
+  console.log("lang", lang);
+  const query = `*[_type == "produto" && translationGroupId == $groupId && idioma == $lang][0]{
     _id,
     nome,
     preco,
-    "image": imagem.asset->url
+    translationGroupId,
+    "imagem": imagem.asset->url
   }`;
 
-  const productData = await client.fetch(query, { id });
+  const productData = await client.fetch(query, { groupId, lang });
 
   if (!productData) return null;
 
-  const product: Product = {
+  return {
     _id: productData._id,
     name: productData.nome,
     price: productData.preco,
-    image: productData.image,
+    image: productData.imagem,
+    translationGroupId: productData.translationGroupId
   };
-
-  return product;
 }
+
 
 
 

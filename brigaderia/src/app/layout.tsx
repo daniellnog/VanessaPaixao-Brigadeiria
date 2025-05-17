@@ -1,6 +1,7 @@
-import Navbar from "@/components/navbar"; // Assumindo que 'components' está na raiz do projeto
-import "./globals.css"; // Certifique-se de que o caminho está correto
-import Footer from "@/components/footer";
+import Navbar from "@/components/NavBar";
+import "./globals.css";
+import Footer from "@/components/Footer";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 export default function RootLayout({
   children,
@@ -15,9 +16,11 @@ export default function RootLayout({
         <title>Brigaderia da Vanessa</title>
       </head>
       <body className="min-h-screen bg-[#96654A] text-white font-sans">
-        <Navbar />
-        <main className="max-w-6xl mx-auto px-4 py-8">{children}</main>
-        <Footer />
+        <LanguageProvider>
+          <Navbar />
+          <main className="max-w-6xl mx-auto px-4 py-8">{children}</main>
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

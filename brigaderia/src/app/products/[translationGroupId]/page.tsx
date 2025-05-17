@@ -1,13 +1,22 @@
-import { getProductById } from "@/lib/sanity-queries";
+import { getProductByTranslationGroupId } from "@/lib/sanity-queries";
 import { notFound } from "next/navigation";
 import { Product } from "@/types/types";
+import { cookies } from "next/headers";
+
+export const runtime = "nodejs"; // 👈 Força o ambiente correto
 
 type Props = {
-  params: { id: string };
+  params: { translationGroupId: string };
 };
 
 export default async function ProductPage({ params }: Props) {
-  const product: Product | null = await getProductById(params.id);
+  const cookieStore = cookies(); // <- isso é síncrono!
+  const lang = cookieStore.get("language")?.value || "pt";
+
+  const product: Product | null = await getProductByTranslationGroupId(
+    params.translationGroupId,
+    lang
+  );
 
   if (!product) {
     notFound();

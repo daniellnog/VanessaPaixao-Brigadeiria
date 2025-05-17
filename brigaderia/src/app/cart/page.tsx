@@ -1,8 +1,10 @@
-export default function ProductsPage() {
+// app/products/page.tsx (continua como Server Component)
+import ProductContent from "@/components/cart/CartContent";
+
+export default function CartPage() {
   return (
-    <main className="p-8">
-      <h1 className="text-2xl font-semibold mb-4">Meu carrinho</h1>
-      <p>Aqui você verá o conteúdo do seu carrinho</p>
-    </main>
+    <div>
+      <ProductContent />
+    </div>
   );
 }

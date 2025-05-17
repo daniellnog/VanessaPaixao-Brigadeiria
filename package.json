@@ -2,5 +2,8 @@
   "dependencies": {
     "@portabletext/react": "^3.2.1",
     "@sanity/client": "^6.29.0"
+  },
+  "devDependencies": {
+    "@portabletext/types": "^2.0.13"
   }
 }
